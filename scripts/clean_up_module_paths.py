@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.0.0
+# Version: 1.0.1
 
 # Import modules to interface with the system.
 import os
@@ -95,6 +95,7 @@ def main():
     paths_to_remove = removal_prompt(contents)
     remove_modules(paths_to_remove)
     print(f"\n{green}Sucessfully removed all module paths. Exiting...{nc}")
+
 
 if __name__ == "__main__":
     main()
