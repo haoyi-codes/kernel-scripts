@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.0.1
+# Version: 1.1.0
 
 # Import modules to interface with the system.
 import os
@@ -20,46 +20,84 @@ red="\033[0;31m"
 nc="\033[0m"
 
 def check_if_superuser():
+    """
+    This function checks if the user is root. If the user isn't root then it
+    exits the script with a failure.
+
+    Returns:
+        None: This function does not return a value.
+    """
+
+    # Check if uid = 0 (root) to continue.
     if os.getuid() != 0:
         print(f"{red}{os.path.basename(sys.argv[0])}: must be superuser.{nc}")
-        sys.exit(1)
+        sys.exit(1) # Exit with error code 1
 
     return None
 
 
 def list_contents(parent_dir):
-    contents_path = []
+    """
+    This function lists out the contents of parent_dir and stores their absolute
+    paths in a list. It then returns that list sorted in descending order.
 
+    Args:
+        parent_dir (str): The absolute path to where the parent directory is.
+
+    Returns
+        sorted_contents (list): A sorted list of all the absolute paths of
+                                parent_dir's contents in descending order.
+    """
+
+    contents = []
+
+    # Append the absolute paths for every sub directory in the parent
+    # directory to the contents list.
     for sub_dir in os.listdir(parent_dir):
-        absolute_sub_dir_path = os.path.join(parent_dir, sub_dir)
-        contents_path.append(absolute_sub_dir_path)
+        sub_dir_absolute_path = os.path.join(parent_dir, sub_dir)
+        contents.append(sub_dir_absolute_path)
 
-    if len(contents_path) <= 2:
-        print(f"{green}The module paths have already been pruned.{nc}")
-        sys.exit(0)
+    # If there are only 2 or less directories in the parent directory it has
+    # already been pruned so we can exit successfully.
+    if len(contents) <= 2:
+        print(f"{green}/lib/modules has already been pruned.{nc}")
+        sys.exit(0) # Exit successfully
 
-    sorted_contents_path = sorted(contents_path, reverse=True)
-    print("Here is a list of all the available module directories in /lib/modules/:\n")
-
-    for item in sorted_contents_path:
-        print(item)
-
-    return sorted_contents_path
+    # Sort the list from highest to lowest to get the newest directories at the
+    # start.
+    sorted_contents = sorted(contents, reverse=True)
+    return sorted_contents
 
 
-def removal_prompt(contents):
-    print("\nWe will keep the latest two module paths, which are:\n")
-    saved_paths = contents[:2]
+def removal_prompt(sorted_contents):
+    """
+    This function prompts the user if they want to remove the older directories or
+    not. It exits the program if the user decides to keep them.
+
+    Args:
+        sorted_contents (list): A sorted list in descending order of the absolute paths
+                         to the target directories.
+
+    Returns
+        paths_to_remove (list): A list of absolute paths to the directories that
+                                are planned to be removed.
+    """
+
+    # Inform the user that all the directories apart from the latest two are to be removed.
+
+    print("\nWe will keep the latest two module paths:\n")
+    saved_paths = sorted_contents[:2]
 
     for item in saved_paths:
         print(item)
 
     print("\nWe will remove the following module paths:\n")
-    paths_to_remove = contents[2:]
+    paths_to_remove = sorted_contents[2:]
 
     for item in paths_to_remove:
         print(item)
 
+    # Ask the user if they want to continue with the removal process.
     while True:
         user_input = input("\nWould you like to remove these paths? (Y/n) ").strip().lower()
 
@@ -67,7 +105,7 @@ def removal_prompt(contents):
             break
         elif user_input == "n" or user_input == "no":
             print(f"\n{green}Exiting...{nc}")
-            sys.exit(0)
+            sys.exit(0) # Exit successfully
         else:
             print(f"\n{red}Invalid input: \"{user_input}\".{nc}")
             print(f"{red}Please try again.{nc}")
@@ -76,8 +114,24 @@ def removal_prompt(contents):
 
 
 def remove_modules(paths_to_remove):
+    """
+    This function removes all the directories listed in the paths_to_remove
+    list.
+
+    Args:
+        paths_to_remove (list): A list of absolute paths to the directories that
+                                are planned to be removed.
+
+    Returns
+        None: This function does not return a value.
+
+    Raises:
+        Exception: If there was an issue with removing a directory.
+    """
+
     print("\n")
 
+    # Try removing each directory and if it doesn't work throw an error.
     for path in paths_to_remove:
         try:
             if os.path.isdir(path):
@@ -89,13 +143,18 @@ def remove_modules(paths_to_remove):
     return None
 
 
-def main():
-    check_if_superuser()
-    contents = list_contents("/lib/modules/")
-    paths_to_remove = removal_prompt(contents)
-    remove_modules(paths_to_remove)
-    print(f"\n{green}Sucessfully removed all module paths. Exiting...{nc}")
-
-
 if __name__ == "__main__":
-    main()
+    # Check if script is run as root.
+    check_if_superuser()
+
+    # Sort module directories based on version in descending order.
+    sorted_contents = list_contents("/lib/modules/")
+
+    # Ask if the user wants to remove deprecated directories.
+    paths_to_remove = removal_prompt(sorted_contents)
+
+    # Remove the deprecated directories.
+    remove_modules(paths_to_remove)
+
+    # Success!
+    print(f"\n{green}Successfully pruned /lib/modules. Exiting...{nc}")
