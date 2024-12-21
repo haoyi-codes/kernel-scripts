@@ -11,4 +11,6 @@ upgrades, compilation, and installation.
 
 === Contents
 
-* https://src.reticentadmin.com/aryan/kernel-scripts/src/branch/main/scripts[scripts]
+==== https://src.reticentadmin.com/aryan/kernel-scripts/src/branch/main/scripts[scripts]
+
+* https://src.reticentadmin.com/aryan/kernel-scripts/src/branch/main/scripts/clean_up_module_paths.py[clean_up_module_paths.py]
