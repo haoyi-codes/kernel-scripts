@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.2.0
+# Version: 1.3.0
 
 # Import modules to interface with the system.
 import os
@@ -22,8 +22,8 @@ nc="\033[0m"
 
 def check_if_superuser():
     """
-    This function checks if the user is root. If the user isn't root then it
-    exits the script with a failure.
+    Check if the user is root. If the user isn't root then it exits the script
+    with a failure.
 
     Returns:
         None: This function does not return a value.
@@ -40,8 +40,8 @@ def check_if_superuser():
 
 def list_contents(parent_dir):
     """
-    This function lists out the contents of parent_dir and stores their absolute
-    paths in a list. It then returns that list sorted in descending order.
+    List out the contents of parent_dir and store their absolute paths in a
+    list called contents. Then return that list sorted in descending order.
 
     Args:
         parent_dir (str): The absolute path to where the parent directory is.
@@ -74,8 +74,8 @@ def list_contents(parent_dir):
 
 def removal_prompt(sorted_contents):
     """
-    This function prompts the user if they want to remove the older directories or
-    not. It exits the program if the user decides to keep them.
+    Prompt the user if they want to remove the older directories; otherwise,
+    exit.
 
     Args:
         sorted_contents (list): A sorted list in descending order of the absolute paths
@@ -118,8 +118,7 @@ def removal_prompt(sorted_contents):
 
 def remove_modules(paths_to_remove):
     """
-    This function removes all the directories listed in the paths_to_remove
-    list.
+    Remove all directories in the paths_to_remove list.
 
     Args:
         paths_to_remove (list): A list of absolute paths to the directories that
