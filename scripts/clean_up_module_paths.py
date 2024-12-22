@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.4.1
+# Version: 1.4.2
 
 # Import modules to interface with the system.
 import os
@@ -130,7 +130,7 @@ def remove_modules(paths_to_remove):
         Exception: If there was an issue with removing a directory.
     """
 
-    print("\n")
+    print("")
 
     # Try removing each directory and if it doesn't work throw an error.
     for path in paths_to_remove:
