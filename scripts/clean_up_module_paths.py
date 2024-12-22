@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.3.0
+# Version: 1.3.1
 
 # Import modules to interface with the system.
 import os
@@ -44,7 +44,7 @@ def list_contents(parent_dir):
     list called contents. Then return that list sorted in descending order.
 
     Args:
-        parent_dir (str): The absolute path to where the parent directory is.
+        parent_dir (pathlib.PosixPath): The absolute path to where the parent directory is.
 
     Returns
         sorted_contents (list): A sorted list of all the absolute paths of
