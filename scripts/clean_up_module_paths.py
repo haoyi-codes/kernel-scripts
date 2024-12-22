@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.4.2
+# Version: 1.4.3
 
 # Import modules to interface with the system.
 import os
@@ -46,7 +46,7 @@ def list_contents(parent_dir):
     Args:
         parent_dir (pathlib.PosixPath): The absolute path to where the parent directory is.
 
-    Returns
+    Returns:
         sorted_contents (list): A sorted list of all the absolute paths of
                                 parent_dir's contents in descending order.
     """
@@ -80,7 +80,7 @@ def removal_prompt(sorted_contents):
         sorted_contents (list): A sorted list in descending order of the absolute paths
                          to the target directories.
 
-    Returns
+    Returns:
         paths_to_remove (list): A list of absolute paths to the directories that
                                 are planned to be removed.
     """
@@ -123,7 +123,7 @@ def remove_modules(paths_to_remove):
         paths_to_remove (list): A list of absolute paths to the directories that
                                 are planned to be removed.
 
-    Returns
+    Returns:
         None: This function does not return a value.
 
     Raises:
