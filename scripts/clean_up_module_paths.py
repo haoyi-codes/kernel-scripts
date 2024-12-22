@@ -7,10 +7,11 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.1.0
+# Version: 1.2.0
 
 # Import modules to interface with the system.
 import os
+from pathlib import Path
 import shutil
 import sys
 
@@ -30,7 +31,8 @@ def check_if_superuser():
 
     # Check if uid = 0 (root) to continue.
     if os.getuid() != 0:
-        print(f"{red}{os.path.basename(sys.argv[0])}: must be superuser.{nc}")
+        program_name = Path(sys.argv[0]).name
+        print(f"{red}{program_name}: must be superuser.{nc}")
         sys.exit(1) # Exit with error code 1
 
     return None
@@ -49,12 +51,13 @@ def list_contents(parent_dir):
                                 parent_dir's contents in descending order.
     """
 
+    parent_dir = Path(parent_dir)
     contents = []
 
     # Append the absolute paths for every sub directory in the parent
     # directory to the contents list.
-    for sub_dir in os.listdir(parent_dir):
-        sub_dir_absolute_path = os.path.join(parent_dir, sub_dir)
+    for sub_dir in parent_dir.iterdir():
+        sub_dir_absolute_path = sub_dir.resolve()
         contents.append(sub_dir_absolute_path)
 
     # If there are only 2 or less directories in the parent directory it has
@@ -134,7 +137,7 @@ def remove_modules(paths_to_remove):
     # Try removing each directory and if it doesn't work throw an error.
     for path in paths_to_remove:
         try:
-            if os.path.isdir(path):
+            if path.is_dir():
                 shutil.rmtree(path)
                 print(f"{green}Removed {path}.{nc}")
         except Exception as e:
