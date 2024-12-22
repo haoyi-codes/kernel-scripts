@@ -7,11 +7,11 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.3.1
+# Version: 1.4.1
 
 # Import modules to interface with the system.
 import os
-from pathlib import Path
+import pathlib
 import shutil
 import sys
 
@@ -31,7 +31,7 @@ def check_if_superuser():
 
     # Check if uid = 0 (root) to continue.
     if os.getuid() != 0:
-        program_name = Path(sys.argv[0]).name
+        program_name = pathlib.Path(sys.argv[0]).name
         print(f"{red}{program_name}: must be superuser.{nc}")
         sys.exit(1) # Exit with error code 1
 
@@ -51,7 +51,6 @@ def list_contents(parent_dir):
                                 parent_dir's contents in descending order.
     """
 
-    parent_dir = Path(parent_dir)
     contents = []
 
     # Append the absolute paths for every sub directory in the parent
@@ -150,7 +149,9 @@ if __name__ == "__main__":
     check_if_superuser()
 
     # Sort module directories based on version in descending order.
-    sorted_contents = list_contents("/lib/modules/")
+    parent_dir = "/lib/modules/"
+    parent_dir = pathlib.Path(parent_dir)
+    sorted_contents = list_contents(parent_dir)
 
     # Ask if the user wants to remove deprecated directories.
     paths_to_remove = removal_prompt(sorted_contents)
