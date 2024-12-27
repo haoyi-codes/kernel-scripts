@@ -7,18 +7,14 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.4.3
+# Version: 1.5.3
 
 # Import modules to interface with the system.
+import colorama
 import os
 import pathlib
 import shutil
 import sys
-
-# Colors
-green="\033[0;32m"
-red="\033[0;31m"
-nc="\033[0m"
 
 def check_if_superuser():
     """
@@ -32,10 +28,34 @@ def check_if_superuser():
     # Check if uid = 0 (root) to continue.
     if os.getuid() != 0:
         program_name = pathlib.Path(sys.argv[0]).name
-        print(f"{red}{program_name}: must be superuser.{nc}")
+        print(colorize(f"{program_name}: must be superuser.", colorama.Fore.RED))
         sys.exit(1) # Exit with error code 1
 
     return None
+
+
+def colorize(text, color):
+    """
+    Check if NO_COLOR environment variable is set or if the global parameter
+    no_color exists. Then color text accordingly.
+
+    Args:
+        text (str): Text that is about to be printed.
+        color (str): Foreground color that the text should be printed in.
+
+    Returns:
+        text (str): Text that has been colored or not depending on environment
+                    variable.
+    """
+    global no_color
+    
+    if "no_color" not in globals():
+        no_color = os.getenv("NO_COLOR")
+
+    if no_color != "1":
+        text = color + text
+
+    return text
 
 
 def list_contents(parent_dir):
@@ -62,7 +82,8 @@ def list_contents(parent_dir):
     # If there are only 2 or less directories in the parent directory it has
     # already been pruned so we can exit successfully.
     if len(contents) <= 2:
-        print(f"{green}/lib/modules has already been pruned.{nc}")
+        print(colorize(f"/lib/modules has already been pruned.",
+              colorama.Fore.GREEN))
         sys.exit(0) # Exit successfully
 
     # Sort the list from highest to lowest to get the newest directories at the
@@ -106,11 +127,12 @@ def removal_prompt(sorted_contents):
         if user_input == "" or user_input == "y" or user_input == "yes":
             break
         elif user_input == "n" or user_input == "no":
-            print(f"\n{green}Exiting...{nc}")
+            print(colorize(f"\nExiting...", colorama.Fore.GREEN))
             sys.exit(0) # Exit successfully
         else:
-            print(f"\n{red}Invalid input: \"{user_input}\".{nc}")
-            print(f"{red}Please try again.{nc}")
+            print(colorize(f"\nInvalid input: \"{user_input}\".",
+                           colorama.Fore.RED))
+            print(colorize(f"Please try again.", colorama.Fore.RED))
 
     return paths_to_remove
 
@@ -137,9 +159,9 @@ def remove_modules(paths_to_remove):
         try:
             if path.is_dir():
                 shutil.rmtree(path)
-                print(f"{green}Removed {path}.{nc}")
+                print(colorize(f"Removed {path}.", colorama.Fore.GREEN))
         except Exception as e:
-            print(f"{red}Error removing {path}: {e}{nc}")
+            print(colorize(f"Error removing {path}: {e}", colorama.Fore.RED))
 
     return None
 
@@ -160,4 +182,5 @@ if __name__ == "__main__":
     remove_modules(paths_to_remove)
 
     # Success!
-    print(f"\n{green}Successfully pruned /lib/modules. Exiting...{nc}")
+    print(colorize(f"\nSuccessfully pruned /lib/modules. Exiting...",
+                   colorama.Fore.GREEN))
