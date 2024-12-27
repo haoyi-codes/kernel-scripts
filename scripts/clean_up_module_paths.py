@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.6.3
+# Version: 1.6.4
 
 # Import modules to interface with the system.
 import colorama
@@ -92,26 +92,6 @@ def list_contents(parent_dir):
     return sorted_contents
 
 
-def main():
-    # Check if script is run as root.
-    check_if_superuser()
-
-    # Sort module directories based on version in descending order.
-    parent_dir = "/lib/modules/"
-    parent_dir = pathlib.Path(parent_dir)
-    sorted_contents = list_contents(parent_dir)
-
-    # Ask if the user wants to remove deprecated directories.
-    paths_to_remove = removal_prompt(sorted_contents)
-
-    # Remove the deprecated directories.
-    remove_modules(paths_to_remove)
-
-    # Success!
-    print(colorize(f"\nSuccessfully pruned /lib/modules. Exiting...",
-                   colorama.Fore.GREEN))
-
-
 def removal_prompt(sorted_contents):
     """
     Prompt the user if they want to remove the older directories; otherwise,
@@ -184,6 +164,26 @@ def remove_modules(paths_to_remove):
             print(colorize(f"Error removing {path}: {e}", colorama.Fore.RED))
 
     return None
+
+
+def main():
+    # Check if script is run as root.
+    check_if_superuser()
+
+    # Sort module directories based on version in descending order.
+    parent_dir = "/lib/modules/"
+    parent_dir = pathlib.Path(parent_dir)
+    sorted_contents = list_contents(parent_dir)
+
+    # Ask if the user wants to remove deprecated directories.
+    paths_to_remove = removal_prompt(sorted_contents)
+
+    # Remove the deprecated directories.
+    remove_modules(paths_to_remove)
+
+    # Success!
+    print(colorize(f"\nSuccessfully pruned /lib/modules. Exiting...",
+                   colorama.Fore.GREEN))
 
 
 if __name__ == "__main__":
