@@ -9,6 +9,26 @@ absolute links instead. This means that they will not work for mirrors.
 This repository holds python scripts that automate the process of kernel
 upgrades, compilation, and installation.
 
+These scripts assume you have the following format:
+
+[source,text]
+----
+/boot
+└── efi
+    └── boot
+        ├── backup.efi
+        └── bootx64.efi # Main bootable UKI or vmlinuz
+
+/lib
+└── modules # Installed kernel modules
+
+/usr/local/src
+└── ${hostname}
+    ├── vmlinuz # Optional vmlinuz directory for booting kernel without an initramfs
+    ├── linux
+    └── uki
+----
+
 === Contents
 
 ==== https://src.reticentadmin.com/aryan/kernel-scripts/src/branch/main/scripts[scripts]
