@@ -14,3 +14,16 @@ upgrades, compilation, and installation.
 ==== https://src.reticentadmin.com/aryan/kernel-scripts/src/branch/main/scripts[scripts]
 
 * https://src.reticentadmin.com/aryan/kernel-scripts/src/branch/main/scripts/clean_up_module_paths.py[clean_up_module_paths.py]
+* https://src.reticentadmin.com/aryan/kernel-scripts/src/branch/main/scripts/clean_up_kernel_source_dirs.py[clean_up_kernel_source_dirs.py]
+
+[source,console]
+----
+usage: clean_up_kernel_source_dirs.py [-h] [--no-color] [system_name]
+
+positional arguments:
+  system_name  name of system that needs its source directories pruned.
+
+options:
+  -h, --help   show this help message and exit
+  --no-color   disables colored output.
+----
