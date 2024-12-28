@@ -7,9 +7,10 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.6.4
+# Version: 1.7.4
 
-# Import modules to interface with the system.
+# Import standard libraries.
+import argparse
 import colorama
 import os
 import pathlib
@@ -166,9 +167,37 @@ def remove_modules(paths_to_remove):
     return None
 
 
+def parse_arguments() -> None:
+    """
+    Parse arguments that have been passed in the command line using the argparse
+    library.
+
+    Returns:
+        None: This function does not return a value.
+    """
+
+    # Specify the global no_color variable.
+    global no_color
+
+    # Parse optional arguments.
+    parser = argparse.ArgumentParser(description="Prunes the /lib/modules/ directory.")
+    parser.add_argument("--no-color", action="store_true",
+                        help="disables colored output.")
+    args = parser.parse_args()
+
+    # Set the global variable no_color to 1 if user passed --no-color.
+    if args.no_color:
+       no_color = "1" 
+
+    return None
+
+
 def main():
     # Check if script is run as root.
     check_if_superuser()
+
+    # Parse command line arguments.
+    parse_arguments()
 
     # Sort module directories based on version in descending order.
     parent_dir = "/lib/modules/"
