@@ -8,7 +8,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.0.2
+# Version: 2.0.0
 
 # Import modules to interface with the system.
 import argparse
@@ -123,14 +123,14 @@ def parse_arguments() -> str:
 
     # Parse optional arguments.
     parser = argparse.ArgumentParser(description="Prune deprecated kernel source files/directories.")
-    parser.add_argument("--no-color", action="store_true",
+    parser.add_argument("--nocolor", action="store_true",
                         help="disables colored output.")
     parser.add_argument("system_name", nargs="?", type=str,
                         help="name of system that needs its source directories pruned.")
     args = parser.parse_args()
 
-    # Set the global variable no_color to 1 if user passed --no-color.
-    if args.no_color:
+    # Set the global variable no_color to 1 if user passed --nocolor.
+    if args.nocolor:
        no_color = "1" 
 
     # If the user doesn't pass a system_name assume its the hostname.

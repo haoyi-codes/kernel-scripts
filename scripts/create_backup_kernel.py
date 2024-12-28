@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.0.0
+# Version: 2.0.0
 
 # Import standard libraries.
 import argparse
@@ -161,12 +161,12 @@ def parse_arguments() -> None:
 
     # Parse optional arguments.
     parser = argparse.ArgumentParser(description="Copies the main boot kernel efi file to the backup location.")
-    parser.add_argument("--no-color", action="store_true",
+    parser.add_argument("--nocolor", action="store_true",
                         help="disables colored output.")
     args = parser.parse_args()
 
-    # Set the global variable no_color to 1 if user passed --no-color.
-    if args.no_color:
+    # Set the global variable no_color to 1 if user passed --nocolor.
+    if args.nocolor:
        no_color = "1" 
 
     return None
