@@ -8,7 +8,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.0.1
+# Version: 1.0.2
 
 # Import modules to interface with the system.
 import argparse
@@ -19,6 +19,7 @@ import shutil
 import socket
 import sys
 import typing
+
 
 def check_if_superuser() -> None:
     """
