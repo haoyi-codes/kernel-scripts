@@ -20,6 +20,8 @@ upgrades, compilation, and installation.
 ----
 usage: clean_up_kernel_source_dirs.py [-h] [--no-color] [system_name]
 
+Prune deprecated kernel source files/directories.
+
 positional arguments:
   system_name  name of system that needs its source directories pruned.
 
