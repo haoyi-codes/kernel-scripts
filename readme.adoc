@@ -27,3 +27,16 @@ options:
   -h, --help   show this help message and exit
   --no-color   disables colored output.
 ----
+
+* https://src.reticentadmin.com/aryan/kernel-scripts/src/branch/main/scripts/create_backup_kernel.py[create_backup_kernel.py]
+
+[source,console]
+----
+usage: create_backup_kernel.py [-h] [--no-color]
+
+Copies the main boot kernel efi file to the backup location.
+
+options:
+  -h, --help  show this help message and exit
+  --no-color  disables colored output.
+----
