@@ -8,7 +8,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 2.0.2
+# Version: 2.0.3
 
 # Import modules to interface with the system.
 import argparse
@@ -278,7 +278,7 @@ def main():
     # If the removal_list is empty then we can just exit as everything has been
     # pruned already.
     if len(removal_list) == 0:
-        print(colorize("Exiting...\n", colorama.Fore.GREEN))
+        print(colorize("Exiting...", colorama.Fore.GREEN))
         sys.exit(0)
 
     # Remove the deprecated files/directories.
