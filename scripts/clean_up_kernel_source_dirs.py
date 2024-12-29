@@ -8,7 +8,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 2.0.1
+# Version: 2.0.2
 
 # Import modules to interface with the system.
 import argparse
@@ -220,10 +220,10 @@ def prune_list(removal_list) -> None:
             try:
                 if path.is_dir():
                     shutil.rmtree(path)
-                    print(colorize(f"Removed {path}.\n", colorama.Fore.GREEN))
+                    print(colorize(f"Removed {path}.", colorama.Fore.GREEN))
                 elif path.is_file():
                     path.unlink()
-                    print(colorize(f"Removed {path}.\n", colorama.Fore.GREEN))
+                    print(colorize(f"Removed {path}.", colorama.Fore.GREEN))
             except Exception as e:
                 print(colorize(f"Error removing {path}: {e}", colorama.Fore.RED))
                 sys.exit(1)
@@ -285,7 +285,7 @@ def main():
     prune_list(removal_list)
 
     # Success!
-    print(colorize(f"Successfully pruned all chosen kernel source directories! Exiting...\n", colorama.Fore.GREEN))
+    print(colorize(f"\nSuccessfully pruned all chosen kernel source directories! Exiting...", colorama.Fore.GREEN))
 
 
 if __name__ == "__main__":
