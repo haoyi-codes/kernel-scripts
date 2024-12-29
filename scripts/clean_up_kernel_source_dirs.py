@@ -8,7 +8,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 2.0.0
+# Version: 2.0.1
 
 # Import modules to interface with the system.
 import argparse
@@ -165,7 +165,7 @@ def removal_prompt(sub_list) -> typing.Optional[list]:
         return None
 
     # Inform the user that all the files/directories apart from the latest two are to be removed.
-    print(colorize(f"We will keep the latest two {path_name} directories:\n",
+    print(colorize(f"We will keep the latest two {path_name} files/directories:\n",
                    colorama.Style.RESET_ALL))
     saved_paths = sub_list[:2]
 
@@ -173,7 +173,7 @@ def removal_prompt(sub_list) -> typing.Optional[list]:
         print(item)
 
     print("")
-    print(colorize(f"We will remove the following {path_name} directories:\n",
+    print(colorize(f"We will remove the following {path_name} files/directories:\n",
                    colorama.Style.RESET_ALL))
     paths_to_remove = sub_list[2:]
 
