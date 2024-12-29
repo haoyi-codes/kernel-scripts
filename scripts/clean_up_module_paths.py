@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 2.0.0
+# Version: 2.0.1
 
 # Import standard libraries.
 import argparse
@@ -182,7 +182,7 @@ def parse_arguments() -> None:
     # Parse optional arguments.
     parser = argparse.ArgumentParser(description="Prunes the /lib/modules/ directory.")
     parser.add_argument("--nocolor", action="store_true",
-                        help="disables colored output.")
+                        help="disables colored output")
     args = parser.parse_args()
 
     # Set the global variable no_color to 1 if user passed --nocolor.
