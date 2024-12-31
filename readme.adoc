@@ -74,3 +74,19 @@ options:
   -h, --help  show this help message and exit
   --nocolor  disables colored output
 ----
+
+* https://src.reticentadmin.com/aryan/kernel-scripts/src/branch/main/scripts/update_kernel_sources.py[update_kernel_sources.py]
+
+[source,console]
+----
+usage: update_kernel_sources.py [-h] [--nocolor] [system_name]
+
+Copies latest kernel source and runs make oldconfig.
+
+positional arguments:
+  system_name  name of system that needs its source directories updated
+
+options:
+  -h, --help   show this help message and exit
+  --nocolor    disables colored output
+----
