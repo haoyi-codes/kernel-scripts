@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.0.0
+# Version: 1.0.1
 
 # Import modules to interface with the system.
 import argparse
@@ -104,6 +104,9 @@ def parse_arguments() -> str:
 
 def main():
     """
+    Copies latest kernel source to user's local directory. Then copies the
+    previous kernel configuration and runs make oldconfig. Finally, increments
+    the MINOR semantic version for the new kernel.
     """
 
     # Check if script is run as root.
