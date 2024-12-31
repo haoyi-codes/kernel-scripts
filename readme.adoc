@@ -27,6 +27,11 @@ These scripts assume you have the following format:
     ├── vmlinuz # Optional vmlinuz directory for booting kernel without an initramfs
     ├── linux
     └── uki
+
+/usr/src
+├── linux
+├── linux-X.Y.Z # Unmodified kernel directories (managed by package manager)
+└── ...
 ----
 
 === Contents
