@@ -8,7 +8,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 3.0.0
+# Version: 3.0.1
 
 # Import modules to interface with the system.
 import argparse
@@ -201,7 +201,7 @@ def parse_arguments() -> argparse.Namespace:
     """
 
     # Parse optional arguments.
-    parser = argparse.ArgumentParser(description="Copies latest kernel source and runs make oldconfig.")
+    parser = argparse.ArgumentParser(description="Prune deprecated kernel source files/directories.")
     parser.add_argument("--hostname", metavar="HOSTNAME", type=str,
                         default=socket.gethostname(),
                         help="name of the system that needs its kernel directories pruned")
