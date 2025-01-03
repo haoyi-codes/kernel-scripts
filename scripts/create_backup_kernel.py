@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 2.0.0
+# Version: 2.1.0
 
 # Import standard libraries.
 import argparse
@@ -38,30 +38,23 @@ def check_if_superuser() -> None:
     return None
 
 
-def colorize(text, color) -> str:
+def colorize(text: str, color:str) -> str:
     """
-    Check if NO_COLOR environment variable is set or if the global parameter
-    no_color exists. Then color text accordingly.
+    Color text based on user defined choice.
 
     Args:
         text  (str): Text that is about to be printed.
         color (str): Foreground color that the text should be printed in.
 
     Returns:
-        text (str): Text that has been colored or not depending on environment
-                    variable.
+        text (str): Text that has been colored or not depending on environment variable.
     """
 
-    # Specify the global no_color variable.
+    # Global variables
     global no_color
-    
-    # If the global no_color variable is not set take the value from the
-    # ENVIRONMENT.
-    if "no_color" not in globals():
-        no_color = os.getenv("NO_COLOR")
 
     # Color the text if no_color is not set.
-    if no_color != "1":
+    if not no_color:
         text = color + text
 
     return text
@@ -147,13 +140,13 @@ def unmount_dir(mount_path) -> None:
                        colorama.Fore.RED))
 
 
-def parse_arguments() -> None:
+def parse_arguments() -> argparse.Namespace:
     """
     Parse arguments that have been passed in the command line using the argparse
     library.
 
     Returns:
-        None: This function does not return a value.
+        args (argparse.Namespace): Command-line arguments parsed using argparse.
     """
 
     # Specify the global no_color variable.
@@ -165,11 +158,7 @@ def parse_arguments() -> None:
                         help="disables colored output.")
     args = parser.parse_args()
 
-    # Set the global variable no_color to 1 if user passed --nocolor.
-    if args.nocolor:
-       no_color = "1" 
-
-    return None
+    return args
 
 
 def main():
@@ -178,11 +167,19 @@ def main():
     backup location. After that is done unmount the boot directory.
     """
     
+    # Global variables
+    global no_color
+
     # Check if script is run as root.
     check_if_superuser()
 
-    # Pass the command line arguments.
-    parse_arguments()
+    # Parse our command-line arguments.
+    args = parse_arguments()
+    no_color = args.nocolor
+
+    # Obtain environmental variables.
+    if os.getenv("NO_COLOR") == "1":
+        no_color = True
 
     # Mount the boot directory.
     boot_dir = pathlib.Path("/boot/")
