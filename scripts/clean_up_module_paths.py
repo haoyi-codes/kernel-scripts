@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 2.0.1
+# Version: 3.0.0
 
 # Import standard libraries.
 import argparse
@@ -17,7 +17,7 @@ import pathlib
 import shutil
 import sys
 
-def check_if_superuser():
+def check_if_superuser() -> None:
     """
     Check if the user is root. If the user isn't root then it exits the script
     with a failure.
@@ -35,31 +35,29 @@ def check_if_superuser():
     return None
 
 
-def colorize(text, color):
+def colorize(text: str, color:str) -> str:
     """
-    Check if NO_COLOR environment variable is set or if the global parameter
-    no_color exists. Then color text accordingly.
+    Color text based on user defined choice.
 
     Args:
-        text (str): Text that is about to be printed.
+        text  (str): Text that is about to be printed.
         color (str): Foreground color that the text should be printed in.
 
     Returns:
-        text (str): Text that has been colored or not depending on environment
-                    variable.
+        text (str): Text that has been colored or not depending on environment variable.
     """
-    global no_color
-    
-    if "no_color" not in globals():
-        no_color = os.getenv("NO_COLOR")
 
-    if no_color != "1":
+    # Global variables
+    global no_color
+
+    # Color the text if no_color is not set.
+    if not no_color:
         text = color + text
 
     return text
 
 
-def list_contents(parent_dir):
+def list_contents(parent_dir: pathlib.PosixPath) -> list:
     """
     List out the contents of parent_dir and store their absolute paths in a
     list called contents. Then return that list sorted in descending order.
@@ -93,7 +91,7 @@ def list_contents(parent_dir):
     return sorted_contents
 
 
-def removal_prompt(sorted_contents):
+def removal_prompt(sorted_contents:list) -> list:
     """
     Prompt the user if they want to remove the older directories; otherwise,
     exit.
@@ -138,7 +136,7 @@ def removal_prompt(sorted_contents):
     return paths_to_remove
 
 
-def remove_modules(paths_to_remove):
+def remove_modules(paths_to_remove:list) -> None:
     """
     Remove all directories in the paths_to_remove list.
 
@@ -167,17 +165,14 @@ def remove_modules(paths_to_remove):
     return None
 
 
-def parse_arguments() -> None:
+def parse_arguments() -> argparse.Namespace:
     """
     Parse arguments that have been passed in the command line using the argparse
     library.
 
     Returns:
-        None: This function does not return a value.
+        args (argparse.Namespace): Command-line arguments parsed using argparse.
     """
-
-    # Specify the global no_color variable.
-    global no_color
 
     # Parse optional arguments.
     parser = argparse.ArgumentParser(description="Prunes the /lib/modules/ directory.")
@@ -185,19 +180,27 @@ def parse_arguments() -> None:
                         help="disables colored output")
     args = parser.parse_args()
 
-    # Set the global variable no_color to 1 if user passed --nocolor.
-    if args.nocolor:
-       no_color = "1" 
-
-    return None
+    return args
 
 
 def main():
+    """
+    Clean up module directories in /lib/modules/.
+    """
+
+    # Global variables
+    global no_color
+
     # Check if script is run as root.
     check_if_superuser()
 
-    # Parse command line arguments.
-    parse_arguments()
+    # Parse our command-line arguments.
+    args = parse_arguments()
+    no_color = args.nocolor
+
+    # Obtain environmental variables.
+    if os.getenv("NO_COLOR") == "1":
+        no_color = True
 
     # Sort module directories based on version in descending order.
     parent_dir = "/lib/modules/"
