@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 2.1.0
+# Version: 2.1.1
 
 # Import standard libraries.
 import argparse
@@ -60,7 +60,7 @@ def colorize(text: str, color:str) -> str:
     return text
 
 
-def get_kernel_version(efi_file_path) -> typing.Optional[str]:
+def get_kernel_version(efi_file_path: pathlib.PosixPath) -> typing.Optional[str]:
     """
     Obtain the kernel version using file and capturing the 9th substring.
 
@@ -94,7 +94,7 @@ def get_kernel_version(efi_file_path) -> typing.Optional[str]:
                        colorama.Fore.RED))
 
 
-def mount_dir(mount_path) -> None:
+def mount_dir(mount_path: pathlib.PosixPath) -> None:
     """
     Mount the directory specified by mount_path.
 
@@ -117,7 +117,7 @@ def mount_dir(mount_path) -> None:
                        colorama.Fore.RED))
 
 
-def unmount_dir(mount_path) -> None:
+def unmount_dir(mount_path: pathlib.PosixPath) -> None:
     """
     Unmount the directory specified by mount_path.
 
