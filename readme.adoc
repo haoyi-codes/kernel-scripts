@@ -41,11 +41,11 @@ These scripts assume you have the following format:
 
 [source,console]
 ----
-# ./scripts/update_kernel_sources.py ${system_name}
+# ./scripts/update_kernel_sources.py --hostname ${system_name}
 # ./scripts/create_backup_kernel.py --nocolor
 # ./scripts/compile_kernel.py -suit -j 32 --hostname ${system_name}
 # ./scripts/clean_up_module_paths.py
-# ./scripts/clean_up_kernel_source_dirs.py
+# ./scripts/clean_up_kernel_source_dirs.py --hostname ${system_name}
 ----
 
 === Contents
