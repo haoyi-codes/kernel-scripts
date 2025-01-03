@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.0.1
+# Version: 1.0.2
 
 # Import modules to interface with the system.
 import argparse
@@ -352,12 +352,6 @@ def main():
     # Check if script is run as root.
     check_if_superuser()
 
-    # Obtain environmental variables.
-    if os.getenv("NO_COLOR") == "1":
-        no_color = True
-    else:
-        no_color = False
-
     # Parse our command-line arguments.
     args = parse_arguments()
     compile_nvidia = args.nvidia
@@ -368,6 +362,10 @@ def main():
     sign_kernel = args.sign
     system_name = args.hostname
     use_tmpfs = args.tmpfs
+
+    # Obtain environmental variables.
+    if os.getenv("NO_COLOR") == "1":
+        no_color = True
 
     # Check if OS is Gentoo if user chose to compile nvidia drivers.
     if compile_nvidia:
