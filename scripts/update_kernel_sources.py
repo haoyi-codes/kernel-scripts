@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.0.1
+# Version: 1.0.2
 
 # Import modules to interface with the system.
 import argparse
@@ -136,6 +136,12 @@ def main():
     for path in pathlib.Path("/usr/src/").iterdir():
         if path.is_dir() and "linux" in path.name and path.name != "linux":
             src_kernels.append(path)
+
+    # Check if there are no kernels available.
+    if len(src_kernels) == 0:
+        print(colorize(f"Error: There are no kernels available to install to the \
+                local source directory", colorama.Fore.RED))
+        sys.exit(1)
 
     src_kernels = sorted(src_kernels, reverse=True)
     latest_kernel_path = src_kernels[0]
