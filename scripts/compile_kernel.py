@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.0.0
+# Version: 1.0.1
 
 # Import modules to interface with the system.
 import argparse
@@ -152,10 +152,24 @@ def compile_kernel(compile_nvidia: bool, is_uki: bool, jobs: int,
 
     # Specify the path to copy the compiled efi executable to.
     output_file_path = output_dir / f"vmlinuz-{kver}.efi"
+    
+    # Specify the path to the bzImage.
+    bzimage_path = work_dir / "arch" / "x86" / "boot" / "bzImage"
 
+    # Sign the kernel if user has specified it.
     if sign_kernel:
-        sign_efi(is_uki, kver, output_file_path, work_dir)
+        sign_efi(bzimage_path, is_uki, kver, output_file_path, work_dir)
+    else:
+        try:
+            shutil.copyfile(bzimage_path, output_file_path)
+            print(colorize(f"Copied vmlinuz-{kver}.efi to local source directory.",
+                           colorama.Fore.GREEN))
+        except Exception as e:
+            print(colorize(f"Unknown error when copying vmlinuz-{kver}.efi to local \
+                           source directory: {e}", colorama.Fore.RED))
+            sys.exit(1)
 
+    # Compile nvidia drivers against new compiled linux version.
     if compile_nvidia:
         # Specify default options for emerge to override whats in make.conf.
         env = os.environ.copy() # Dictionary of all current env variables.
@@ -172,13 +186,15 @@ def compile_kernel(compile_nvidia: bool, is_uki: bool, jobs: int,
     return output_file_path
 
 
-def sign_efi(is_uki: bool, kver:str,
+def sign_efi(bzimage_path: pathlib.PosixPath,
+             is_uki: bool, kver:str,
              output_file_path: pathlib.PosixPath,
              work_dir: pathlib.PosixPath) -> pathlib.PosixPath:
     """
     Signs the compiled bzImage for use with secure boot.
 
     Args:
+        bzimage_path (pathlib.PosixPath): File path for the bzImage in the work directory.
         is_uki (bool): If True then signs the unified kernel image.
         kver (str): The name of the kernel version that is being compiled.
         output_file_path (pathlib.PosixPath): File path for the signed efi executable.
@@ -214,9 +230,7 @@ def sign_efi(is_uki: bool, kver:str,
                        colorama.Fore.RED))
         sys.exit(1)
 
-    # Specify the path to the bzImage executable to sign.
-    bzimage_path = work_dir / "arch" / "x86" / "boot" / "bzImage"
-
+    # Sign the efi executable using sbsign.
     try:
         result = subprocess.run(["sbsign",
                                  "--key", db_key_path,
