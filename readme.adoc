@@ -69,16 +69,14 @@ options:
 
 [source,console]
 ----
-usage: clean_up_kernel_source_dirs.py [-h] [--nocolor] [system_name]
+usage: clean_up_kernel_source_dirs.py [-h] [--hostname HOSTNAME] [--nocolor]
 
-Prune deprecated kernel source files/directories.
-
-positional arguments:
-  system_name  name of system that needs its source directories pruned.
+Copies latest kernel source and runs make oldconfig.
 
 options:
-  -h, --help   show this help message and exit
-  --nocolor   disables colored output
+  -h, --help           show this help message and exit
+  --hostname HOSTNAME  name of the system that needs its kernel directories pruned
+  --nocolor            disables colored output
 ----
 
 * https://src.reticentadmin.com/aryan/kernel-scripts/src/branch/main/scripts/compile_kernel.py[compile_kernel.py]
@@ -118,14 +116,12 @@ options:
 
 [source,console]
 ----
-usage: update_kernel_sources.py [-h] [--nocolor] [system_name]
+usage: update_kernel_sources.py [-h] [--hostname HOSTNAME] [--nocolor]
 
 Copies latest kernel source and runs make oldconfig.
 
-positional arguments:
-  system_name  name of system that needs its source directories updated
-
 options:
-  -h, --help   show this help message and exit
-  --nocolor    disables colored output
+  -h, --help           show this help message and exit
+  --hostname HOSTNAME  name of the system that needs its source directories updated
+  --nocolor            disables colored output
 ----

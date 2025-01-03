@@ -8,7 +8,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 2.0.4
+# Version: 3.0.0
 
 # Import modules to interface with the system.
 import argparse
@@ -39,36 +39,29 @@ def check_if_superuser() -> None:
     return None
 
 
-def colorize(text, color) -> str:
+def colorize(text: str, color:str) -> str:
     """
-    Check if NO_COLOR environment variable is set or if the global parameter
-    no_color exists. Then color text accordingly.
+    Color text based on user defined choice.
 
     Args:
         text  (str): Text that is about to be printed.
         color (str): Foreground color that the text should be printed in.
 
     Returns:
-        text (str): Text that has been colored or not depending on environment
-                    variable.
+        text (str): Text that has been colored or not depending on environment variable.
     """
 
-    # Specify the global no_color variable.
+    # Global variables
     global no_color
-    
-    # If the global no_color variable is not set take the value from the
-    # ENVIRONMENT.
-    if "no_color" not in globals():
-        no_color = os.getenv("NO_COLOR")
 
     # Color the text if no_color is not set.
-    if no_color != "1":
+    if not no_color:
         text = color + text
 
     return text
 
 
-def create_prunable_list(src_dir) -> typing.Optional[list]:
+def create_prunable_list(src_dir: pathlib.PosixPath) -> typing.Optional[list]:
     """
     Create a list of contents of all available files and subdirectories in the
     kernel source directory that are prunable.
@@ -108,40 +101,7 @@ def create_prunable_list(src_dir) -> typing.Optional[list]:
         return available_dirs
 
 
-def parse_arguments() -> str:
-    """
-    Parse arguments that have been passed in the command line using the argparse
-    library.
-
-    Returns:
-        system_name (str): The name of the system that needs its kernel source
-                           directories pruned.
-    """
-
-    # Specify the global no_color variable.
-    global no_color
-
-    # Parse optional arguments.
-    parser = argparse.ArgumentParser(description="Prune deprecated kernel source files/directories.")
-    parser.add_argument("--nocolor", action="store_true",
-                        help="disables colored output")
-    parser.add_argument("system_name", nargs="?", type=str,
-                        help="name of system that needs its source directories pruned")
-    args = parser.parse_args()
-
-    # Set the global variable no_color to 1 if user passed --nocolor.
-    if args.nocolor:
-       no_color = "1" 
-
-    # If the user doesn't pass a system_name assume its the hostname.
-    if args.system_name is None:
-        system_name = socket.gethostname()
-    else:
-        system_name = args.system_name
-
-    return system_name
-
-def removal_prompt(sub_list) -> typing.Optional[list]:
+def removal_prompt(sub_list:list) -> typing.Optional[list]:
     """
     Prompt the user if they want to remove deprecated files/directories.
 
@@ -161,7 +121,7 @@ def removal_prompt(sub_list) -> typing.Optional[list]:
     # If there are only 2 or less files/directories in the parent directory it has
     # already been pruned.
     if len(sub_list) <= 2:
-        print(colorize(f"The {path_name} directory has already been pruned.\n", colorama.Fore.GREEN))
+        print(colorize(f"The {path_name} directory has already been pruned.", colorama.Fore.GREEN))
         return None
 
     # Inform the user that all the files/directories apart from the latest two are to be removed.
@@ -198,7 +158,7 @@ def removal_prompt(sub_list) -> typing.Optional[list]:
             print(colorize(f"Please try again.", colorama.Fore.RED))
 
 
-def prune_list(removal_list) -> None:
+def prune_list(removal_list:list) -> None:
     """
     Remove all directories in the removal_list list.
 
@@ -231,17 +191,47 @@ def prune_list(removal_list) -> None:
     return None
 
 
+def parse_arguments() -> argparse.Namespace:
+    """
+    Parse arguments that have been passed in the command line using the argparse
+    library.
+
+    Returns:
+        args (argparse.Namespace): Command-line arguments parsed using argparse.
+    """
+
+    # Parse optional arguments.
+    parser = argparse.ArgumentParser(description="Copies latest kernel source and runs make oldconfig.")
+    parser.add_argument("--hostname", metavar="HOSTNAME", type=str,
+                        default=socket.gethostname(),
+                        help="name of the system that needs its kernel directories pruned")
+    parser.add_argument("--nocolor", action="store_true",
+                        help="disables colored output")
+    args = parser.parse_args()
+
+    return args
+
+
 def main():
     """
     Create a list of lists of deprecated kernel source files/directories and
     prompt user for removal. If permission is granted remove them.
     """
 
+    # Global variables
+    global no_color
+
     # Check if script is run as root.
     check_if_superuser()
 
-    # Parse our command line arguments and obtain the system name.
-    system_name = parse_arguments()
+    # Parse our command-line arguments.
+    args = parse_arguments()
+    no_color = args.nocolor
+    system_name = args.hostname
+
+    # Obtain environmental variables.
+    if os.getenv("NO_COLOR") == "1":
+        no_color = True
 
     # Check if the specified system's root kernel source directory exists.
     local_src_dir = pathlib.Path("/usr/local/src/")
@@ -278,14 +268,13 @@ def main():
     # If the removal_list is empty then we can just exit as everything has been
     # pruned already.
     if len(removal_list) == 0:
-        print(colorize("Exiting...", colorama.Fore.GREEN))
         sys.exit(0)
 
     # Remove the deprecated files/directories.
     prune_list(removal_list)
 
     # Success!
-    print(colorize(f"\nSuccessfully pruned all chosen kernel source directories! Exiting...", colorama.Fore.GREEN))
+    print(colorize(f"Pruned all chosen kernel source directories.", colorama.Fore.GREEN))
 
 
 if __name__ == "__main__":

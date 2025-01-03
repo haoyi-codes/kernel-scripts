@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.0.2
+# Version: 2.0.1
 
 # Import modules to interface with the system.
 import argparse
@@ -39,67 +39,47 @@ def check_if_superuser() -> None:
     return None
 
 
-def colorize(text, color) -> str:
+def colorize(text: str, color:str) -> str:
     """
-    Check if NO_COLOR environment variable is set or if the global parameter
-    no_color exists. Then color text accordingly.
+    Color text based on user defined choice.
 
     Args:
         text  (str): Text that is about to be printed.
         color (str): Foreground color that the text should be printed in.
 
     Returns:
-        text (str): Text that has been colored or not depending on environment
-                    variable.
+        text (str): Text that has been colored or not depending on environment variable.
     """
 
-    # Specify the global no_color variable.
+    # Global variables
     global no_color
-    
-    # If the global no_color variable is not set take the value from the
-    # ENVIRONMENT.
-    if "no_color" not in globals():
-        no_color = os.getenv("NO_COLOR")
 
     # Color the text if no_color is not set.
-    if no_color != "1":
+    if not no_color:
         text = color + text
 
     return text
 
 
-def parse_arguments() -> str:
+def parse_arguments() -> argparse.Namespace:
     """
     Parse arguments that have been passed in the command line using the argparse
     library.
 
     Returns:
-        system_name (str): The name of the system that needs its kernel source
-                           updated.
+        args (argparse.Namespace): Command-line arguments parsed using argparse.
     """
-
-    # Specify the global no_color variable.
-    global no_color
 
     # Parse optional arguments.
     parser = argparse.ArgumentParser(description="Copies latest kernel source and runs make oldconfig.")
-    parser.add_argument("system_name", nargs="?", type=str,
-                        help="name of system that needs its source directories updated")
+    parser.add_argument("--hostname", metavar="HOSTNAME", type=str,
+                        default=socket.gethostname(),
+                        help="name of the system that needs its source directories updated")
     parser.add_argument("--nocolor", action="store_true",
                         help="disables colored output")
     args = parser.parse_args()
 
-    # Set the global variable no_color to 1 if user passed --nocolor.
-    if args.nocolor:
-       no_color = "1" 
-
-    # If the user doesn't pass a system_name assume its the hostname.
-    if args.system_name is None:
-        system_name = socket.gethostname()
-    else:
-        system_name = args.system_name
-
-    return system_name
+    return args
 
 
 def main():
@@ -109,11 +89,20 @@ def main():
     the MINOR semantic version for the new kernel.
     """
 
+    # Global variables
+    global no_color
+
     # Check if script is run as root.
     check_if_superuser()
 
-    # Parse our command line arguments and obtain the system name.
-    system_name = parse_arguments()
+    # Parse our command-line arguments.
+    args = parse_arguments()
+    no_color = args.nocolor
+    system_name = args.hostname
+
+    # Obtain environmental variables.
+    if os.getenv("NO_COLOR") == "1":
+        no_color = True
 
     # Check if the specified system's root kernel source directory exists.
     local_src_dir = pathlib.Path("/usr/local/src/")
