@@ -32,6 +32,20 @@ These scripts assume you have the following format:
 ├── linux
 ├── linux-X.Y.Z # Unmodified kernel directories (managed by package manager)
 └── ...
+
+/var/tmp/linux/
+└── ${hostname} # Optional tmpfs directory for compiling in tmpfs
+----
+
+=== Examples
+
+[source,console]
+----
+# ./scripts/update_kernel_sources.py ${system_name}
+# ./scripts/create_backup_kernel.py --nocolor
+# ./scripts/compile_kernel.py -suit -j 32 --hostname ${system_name}
+# ./scripts/clean_up_module_paths.py
+# ./scripts/clean_up_kernel_source_dirs.py
 ----
 
 === Contents
