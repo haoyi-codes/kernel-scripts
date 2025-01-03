@@ -67,6 +67,26 @@ options:
   --nocolor   disables colored output
 ----
 
+* https://src.reticentadmin.com/aryan/kernel-scripts/src/branch/main/scripts/compile_kernel.py[compile_kernel.py]
+
+[source,console]
+----
+usage: compile_kernel.py [-h] [-i] [-j JOBS] [-n] [-s] [-t] [-u] [--nocolor] [--hostname HOSTNAME]
+
+Compiles, signs and installs user selected kernels.
+
+options:
+  -h, --help            show this help message and exit
+  --hostname HOSTNAME   hostname for the system that needs its kernel compiled.
+  -j JOBS, --jobs JOBS  specify the number of parallel jobs for compilation
+  -t, --tmpfs           compiles the kernel in a tmpfs directory (requires /etc/fstab configuration)
+  -u, --uki             compiles a unified kernel image (requires dracut)
+  -s, --sign            signs compiled efi executable (requires sbsign)
+  -i, --install         installs the compiled efi executable to /boot
+  -n, --nvidia          compiles and installs proprietary nvidia drivers alongside the new kernel (GENTOO ONLY!)
+  --nocolor             disables colored output
+----
+
 * https://src.reticentadmin.com/aryan/kernel-scripts/src/branch/main/scripts/create_backup_kernel.py[create_backup_kernel.py]
 
 [source,console]
