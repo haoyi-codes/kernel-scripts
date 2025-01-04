@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 2.0.1
+# Version: 2.0.2
 
 # Import modules to interface with the system.
 import argparse
@@ -210,7 +210,7 @@ def main():
     config_lines = latest_kernel_config.read_text().splitlines()
 
     ## Create a new list based on that to manipulate.
-    new_config_lines = config_lines
+    new_config_lines = config_lines.copy()
 
     ## Enumerate helps us to identify the position of an item in a list.
     for n, line in enumerate(new_config_lines):
