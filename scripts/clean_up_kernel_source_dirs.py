@@ -8,7 +8,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 3.0.1
+# Version: 3.0.2
 
 # Import modules to interface with the system.
 import argparse
@@ -248,9 +248,9 @@ def main():
     # If no directories are found for pruning then user does not have their
     # kernel source directories in the right format.
     if sorted_contents is None:
-        print(colorize(f"No available directories have been found that can be \
-                         pruned. Please make sure you have your directories in the \
-                         correct format.", colorama.Fore.RED))
+        print(colorize(f"No available directories have been found that can be" \
+                " pruned. Please make sure you have your directories in the" \
+                "correct format.", colorama.Fore.RED))
         sys.exit(1)
 
     # Ask if the user wants to remove deprecated files/directories and add them to a

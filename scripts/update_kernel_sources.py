@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 2.0.2
+# Version: 2.0.3
 
 # Import modules to interface with the system.
 import argparse
@@ -128,8 +128,8 @@ def main():
 
     # Check if there are no kernels available.
     if len(src_kernels) == 0:
-        print(colorize(f"Error: There are no kernels available to install to the \
-                local source directory", colorama.Fore.RED))
+        print(colorize(f"Error: There are no kernels available to install" \
+                "to the local source directory", colorama.Fore.RED))
         sys.exit(1)
 
     src_kernels = sorted(src_kernels, reverse=True)

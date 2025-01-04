@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.0.2
+# Version: 1.0.3
 
 # Import modules to interface with the system.
 import argparse
@@ -120,8 +120,8 @@ def compile_kernel(compile_nvidia: bool, is_uki: bool, jobs: int,
     if is_uki:
         # Check if dracut is available.
         if not check_for_executable("dracut"):
-            print(colorize("\nError: dracut was not found in your PATH. This is \
-                    needed to generate an initramfs.", colorama.Fore.RED))
+            print(colorize("\nError: dracut was not found in your PATH. This is" \
+                    "needed to generate an initramfs.", colorama.Fore.RED))
             sys.exit(1)
         try:
             print(colorize(f"\nInstalling kernel modules for {kver}...\n", colorama.Style.RESET_ALL))
@@ -206,8 +206,8 @@ def sign_efi(bzimage_path: pathlib.PosixPath,
 
     # Check if sbsign is available.
     if not check_for_executable("sbsign"):
-        print(colorize("\nError: sbsign was not found in your PATH. This is needed to \
-                sign the efi executable to be used with secure boot.",
+        print(colorize("\nError: sbsign was not found in your PATH. This is" \
+                "needed to sign the efi executable to be used with secure boot.",
                        colorama.Fore.RED))
         sys.exit(1)
 
@@ -218,8 +218,8 @@ def sign_efi(bzimage_path: pathlib.PosixPath,
 
     # Check if db.key and db.crt exist.
     if not db_key_path.is_file():
-        print(colorize(f"\nError: Can't find db.key, which is needed for signing the \
-                       kernel.", colorama.Fore.RED))
+        print(colorize(f"\nError: Can't find db.key, which is needed for" \
+                "signing the kernel.", colorama.Fore.RED))
         print(colorize("It should be located in /etc/keys/efikeys/db.key.",
                        colorama.Fore.RED))
         sys.exit(1)
