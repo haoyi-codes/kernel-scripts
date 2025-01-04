@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.0.3
+# Version: 1.0.4
 
 # Import modules to interface with the system.
 import argparse
@@ -110,6 +110,7 @@ def compile_kernel(compile_nvidia: bool, is_uki: bool, jobs: int,
     # Go into the work_dir.
     os.chdir(work_dir)
 
+    # Compile kernel
     try:
         print(colorize(f"Compiling kernel {kver}...\n", colorama.Style.RESET_ALL))
         result = subprocess.run(["make", f"-j{jobs}"], check=True)
@@ -117,21 +118,28 @@ def compile_kernel(compile_nvidia: bool, is_uki: bool, jobs: int,
         print(colorize(f"\nError compiling kernel {kver}: {e}", colorama.Fore.RED))
         sys.exit(1)
 
+    # Install kernel modules to /lib/modules/.
+    try:
+        print(colorize(f"\nInstalling kernel modules for {kver}...\n", colorama.Style.RESET_ALL))
+        result = subprocess.run(["make", "modules_install"], check=True)
+    except Exception as e:
+        print(colorize(f"\nError installing kernel modules for {kver}: {e}", colorama.Fore.RED))
+        sys.exit(1)
+
+    # Specify vmlinuz output directory.
+    output_dir = local_src_dir / "vmlinuz"
+
     if is_uki:
         # Check if dracut is available.
         if not check_for_executable("dracut"):
             print(colorize("\nError: dracut was not found in your PATH. This is" \
                     "needed to generate an initramfs.", colorama.Fore.RED))
             sys.exit(1)
-        try:
-            print(colorize(f"\nInstalling kernel modules for {kver}...\n", colorama.Style.RESET_ALL))
-            result = subprocess.run(["make", "modules_install"], check=True)
-        except Exception as e:
-            print(colorize(f"\nError installing kernel modules for {kver}: {e}", colorama.Fore.RED))
-            sys.exit(1)
 
+        # Set output path for initramfs cpio image.
         initramfs_path = local_src_dir / "initramfs" / f"initramfs-{system_name}.cpio"
 
+        # Build initramfs
         try:
             print(colorize(f"\nBuilding initramfs for {kver}...\n", colorama.Style.RESET_ALL))
             result = subprocess.run(["dracut", "-f", f"--kver={kver}", initramfs_path], check=True)
@@ -139,6 +147,7 @@ def compile_kernel(compile_nvidia: bool, is_uki: bool, jobs: int,
             print(colorize(f"\nError building initramfs for {kver}: {e}", colorama.Fore.RED))
             sys.exit(1)
 
+        # Compile kernel with newly built initramfs cpio image.
         try:
             print(colorize(f"\nCompiling kernel {kver} with the newly built initramfs...\n", colorama.Style.RESET_ALL))
             result = subprocess.run(["make", f"-j{jobs}"], check=True)
@@ -146,9 +155,8 @@ def compile_kernel(compile_nvidia: bool, is_uki: bool, jobs: int,
             print(colorize(f"\nError compiling kernel {kver}: {e}", colorama.Fore.RED))
             sys.exit(1)
 
+        # Specify uki output directory.
         output_dir = local_src_dir / "uki"
-    else:
-        output_dir = local_src_dir / "vmlinuz"
 
     # Specify the path to copy the compiled efi executable to.
     output_file_path = output_dir / f"vmlinuz-{kver}.efi"
