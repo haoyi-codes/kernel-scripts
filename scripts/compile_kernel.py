@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 1.0.4
+# Version: 1.0.5
 
 # Import modules to interface with the system.
 import argparse
@@ -275,7 +275,7 @@ def install_kernel(efi_path: pathlib.PosixPath, is_uki: bool, kver: str,
     boot_efi_path = boot_efi_dir / "bootx64.efi"
 
     # Create the boot directory if it doesn't exist.
-    boot_efi_dir.mkdir(parents=True, exist_ok=True)
+    boot_dir.mkdir(parents=True, exist_ok=True)
 
     # Mount the boot directory.
     try:
@@ -286,6 +286,9 @@ def install_kernel(efi_path: pathlib.PosixPath, is_uki: bool, kver: str,
         print(colorize(f"Unknown error when mounting {boot_dir}: {e}",
                     colorama.Fore.RED))
         sys.exit(1)
+
+    # Create the boot directory hierarchy if it doesn't exist.
+    boot_efi_dir.mkdir(parents=True, exist_ok=True)
 
     # Copy the efi file to boot.
     try:
