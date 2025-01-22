@@ -7,7 +7,7 @@
 # Copyright (c) 2024 Aryan
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Version: 2.0.3
+# Version: 2.1.3
 
 # Import modules to interface with the system.
 import argparse
@@ -170,7 +170,7 @@ def main():
 
     try:
         shutil.copyfile(prev_kernel_config, latest_kernel_config)
-        print(colorize(f"Successfully copied {prev_local_kernel_path.name}'s config to {latest_local_kernel_path.name}.",
+        print(colorize(f"Copied {prev_local_kernel_path.name}'s config to {latest_local_kernel_path.name}.",
                        colorama.Fore.GREEN))
     except Exception as e:
         print(colorize(f"Error copying {prev_local_kernel_path.name}'s config to {latest_local_kernel_path}.",
@@ -252,7 +252,7 @@ def main():
     # Write the new_config to .config.
     try:
         latest_kernel_config.write_text(new_config)
-        print(colorize(f"Successfully incremented kernel SEMVER to {new_sem_version}.",
+        print(colorize(f"Incremented kernel SEMVER to {new_sem_version}.",
                        colorama.Fore.GREEN))
     except IOError as e:
          print(colorize(f"An error occurred while writing to {latest_local_kernel_path.name}'s config file: {e}",
@@ -260,7 +260,7 @@ def main():
          sys.exit(1)
 
     # Success!
-    print(colorize(f"Successfully updated kernel source to {latest_kernel_path.name}-{system_name}-{new_sem_version}. Exiting...", colorama.Fore.GREEN))
+    print(colorize(f"Updated kernel source to {latest_kernel_path.name}-{system_name}-{new_sem_version}. Exiting...", colorama.Fore.GREEN))
 
 
 if __name__ == "__main__":
